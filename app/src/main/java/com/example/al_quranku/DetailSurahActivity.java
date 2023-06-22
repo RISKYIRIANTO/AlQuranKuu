@@ -4,18 +4,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
+import com.example.al_quranku.model.Audio.Audio;
 import android.annotation.SuppressLint;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.al_quranku.model.Audio.Audio;
+import com.example.al_quranku.model.Audio.AudioFilesItem;
 import com.example.al_quranku.model.AyatModel.Verses;
 import com.example.al_quranku.model.AyatModel.VersesItem;
+import com.example.al_quranku.model.terjemahan.Terjemahan;
+import com.example.al_quranku.model.terjemahan.TranslationsItem;
 import com.example.al_quranku.retrofit.ApiServices;
 
 
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +36,17 @@ public class DetailSurahActivity extends AppCompatActivity {
 
     private AdapterAyat adapterAyat;
 
+    private AdapterTerjemahan adapterTerjemahan;
+
+    private AdapterAudio adapterAudio;
+    /*private ConcatAdapter concatAdapter;*/
+
     private List<VersesItem> results =new ArrayList<>();
+    private List<TranslationsItem> terjemahan = new ArrayList<>();
+
+    private List<AudioFilesItem> audio = new ArrayList<>();
+
+    private MediaPlayer mediaPlayer;
 
     TextView textViewNameSimpleSurah;
     TextView textViewIDSurah;
@@ -40,24 +56,59 @@ public class DetailSurahActivity extends AppCompatActivity {
     TextView textViewTempatTurunSurah;
     TextView textViewJumlahAyatSurah;
 
+    /*public DetailSurahActivity() {
+    }*/
 
-    @SuppressLint("MissingInflatedId")
+    Button btnAudio;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_surah);
 
+        btnAudio = findViewById(R.id.tvAudio);
+
+        int id = getIntent().getIntExtra("id", 1);
+
+
+
+        /*int finalId = id;
+        btnAudio.setOnClickListener(view -> ApiServices.endPoint().getAudio(finalId).enqueue(new Callback<Audio>() {
+            @Override
+            public void onResponse(Call<Audio> call, Response<Audio> response) {
+                if (response.isSuccessful()) {
+                    Audio audio = response.body();
+                    String audioUrl = String.valueOf(audio.getAudioFiles());
+
+                    mediaPlayer = new MediaPlayer();
+                    try {
+                        mediaPlayer.setDataSource(audioUrl);
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                    } catch (IOException t){
+                        t.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Audio> call, Throwable t) {
+
+            }
+        }));*/
+
         String nameSimple = getIntent().getStringExtra("name_simple");
         textViewNameSimpleSurah = findViewById(R.id.tvNamaSurah);
         textViewNameSimpleSurah.setText(nameSimple);
 
-        int id = getIntent().getIntExtra("id", 1);
+        id = getIntent().getIntExtra("id", 1);
         textViewIDSurah = findViewById(R.id.ID);
-        textViewIDSurah.setText("Surah Ke " + (id)+" Di Al-Qur'an");
+        textViewIDSurah.setText("Surah Ke " + (id) + " Di Al-Qur'an");
 
         String nameComplex = getIntent().getStringExtra("name_complex");
         textViewNameComplexSurah = findViewById(R.id.tvNamaKompleks);
-        textViewNameComplexSurah.setText ("("+(nameComplex)+")");
+        textViewNameComplexSurah.setText("(" + (nameComplex) + ")");
 
         String nameArabic = getIntent().getStringExtra("name_arabic");
         textViewNameArabicSurah = findViewById(R.id.tvNamaArab);
@@ -73,20 +124,25 @@ public class DetailSurahActivity extends AppCompatActivity {
 
         int versesCount = getIntent().getIntExtra("verses_count", 1);
         textViewJumlahAyatSurah = findViewById(R.id.tvJumlahAyat);
-        textViewJumlahAyatSurah.setText((versesCount)+" Ayat ");
+        textViewJumlahAyatSurah.setText((versesCount) + " Ayat ");
 
         setUpView();
         setUpRecyclerView();
         System.out.println(id);
         getDataFromApi(id);
+        getDataFromApiArti(id);
+        getDataFromApiAudio(id);
 
     }
 
     private void setUpRecyclerView() {
         adapterAyat = new AdapterAyat(results);
+        adapterTerjemahan = new AdapterTerjemahan((ArrayList<TranslationsItem>) terjemahan);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapterAyat);
+        adapterAudio = new AdapterAudio(audio);
+
     }
 
 
@@ -109,6 +165,40 @@ public class DetailSurahActivity extends AppCompatActivity {
         });
     }
 
+    private void getDataFromApiArti(int id){
+        ApiServices.endPoint().getText(id).enqueue(new Callback<Terjemahan>() {
+            @Override
+            public void onResponse(Call<Terjemahan> call, Response<Terjemahan> response) {
+                if(response.isSuccessful()){
+                    List<TranslationsItem> result = response.body().getTranslations();
+                    Log.d("Arti", result.toString());
+                    adapterTerjemahan.setData(result);
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    Call<Terjemahan> call, Throwable t) {
+                Log.d("Error", t.toString());
+            }
+        });
+    }
+
+    private void getDataFromApiAudio (int id){
+        ApiServices.endPoint().getAudio(id).enqueue(new Callback<Audio>() {
+
+            public void onResponse (Call<Audio> call, Response<Audio> response){
+                List<AudioFilesItem> result = response.body().getAudioFiles();
+                Log.d("Audio", result.toString());
+                adapterAudio.setData(result);
+            }
+
+            @Override
+            public void onFailure(Call<Audio> call, Throwable t) {
+
+            }
+        });
+    }
     
 
     private void setUpView() {

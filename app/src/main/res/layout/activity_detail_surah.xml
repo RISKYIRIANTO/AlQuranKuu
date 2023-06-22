@@ -82,11 +82,21 @@
 
         </androidx.cardview.widget.CardView>
 
+    <Button
+        android:layout_width="match_parent"
+        android:id="@+id/tvAudio"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="wrap_content"
+        android:text="audio"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAyat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+
+
 
 </LinearLayout>
