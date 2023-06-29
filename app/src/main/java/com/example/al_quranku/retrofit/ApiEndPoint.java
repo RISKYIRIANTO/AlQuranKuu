@@ -18,9 +18,10 @@ public interface ApiEndPoint {
     Call<Verses> getAyat(@Query("chapter_number") int id);
 
     @GET("quran/translations/174")
-    Call<Terjemahan> getText(@Query("arti_number") int id);
+    Call<Terjemahan> getText(@Query("chapter_number") int id);
 
-    @GET("chapter_recitations/33?language=id")
-    Call<Audio> getAudio(@Query("arti_number") int id);
+    @GET("chapter_recitations/33?")
+    Call<Audio> getAudio();
+
 
 }

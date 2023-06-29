@@ -2,25 +2,75 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="20dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
-    <TextView
-        android:id="@+id/tvAyat"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textDirection="anyRtl"
-        android:textColor="#015353"
-        android:text="بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ"
-        android:textSize="20sp"
-        />
+        app:cardCornerRadius="15dp"
+        android:layout_margin="10dp"
+        app:cardElevation="10dp">
 
-    <TextView
-        android:id="@+id/tvTerjemahanAyat"
-        android:layout_below="@id/tvAyat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Artinya : BELUM"
-        android:textSize="14sp"
-        />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="8"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvAyat"
+                    android:paddingRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ"
+                    android:textColor="#015353"
+
+                    android:textDirection="anyRtl"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/tvTerjemahanAyat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_below="@id/tvAyat"
+                    android:paddingTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="Artinya : Arti Ayat"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg65"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/NomorAyat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textStyle="bold"
+                    android:textColor="#015353"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

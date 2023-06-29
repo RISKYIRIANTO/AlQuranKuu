@@ -40,14 +40,14 @@ public class AudioFilesItem{
 	}
 
 	@Override
- 	public String toString(){
-		return 
-			"AudioFilesItem{" + 
-			"format = '" + format + '\'' + 
-			",audio_url = '" + audioUrl + '\'' + 
-			",id = '" + id + '\'' + 
-			",chapter_id = '" + chapterId + '\'' + 
-			",file_size = '" + fileSize + '\'' + 
-			"}";
-		}
+	public String toString(){
+		return
+				"AudioFilesItem{" +
+						"format = '" + format + '\'' +
+						",audio_url = '" + audioUrl + '\'' +
+						",id = '" + id + '\'' +
+						",chapter_id = '" + chapterId + '\'' +
+						",file_size = '" + fileSize + '\'' +
+						"}";
+	}
 }

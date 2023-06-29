@@ -38,13 +38,18 @@ public class DetailSurahActivity extends AppCompatActivity {
 
     private AdapterTerjemahan adapterTerjemahan;
 
-    private AdapterAudio adapterAudio;
+   /* private AdapterAudio adapterAudio;*/
     /*private ConcatAdapter concatAdapter;*/
 
-    private List<VersesItem> results =new ArrayList<>();
-    private List<TranslationsItem> terjemahan = new ArrayList<>();
+    private final List<VersesItem> results =new ArrayList<>();
+    private final List<TranslationsItem> terjemahan = new ArrayList<>();
+
+    List <TranslationsItem> result;
+
+    List <VersesItem> versesItems;
 
     private List<AudioFilesItem> audio = new ArrayList<>();
+
 
     private MediaPlayer mediaPlayer;
 
@@ -126,80 +131,84 @@ public class DetailSurahActivity extends AppCompatActivity {
         textViewJumlahAyatSurah = findViewById(R.id.tvJumlahAyat);
         textViewJumlahAyatSurah.setText((versesCount) + " Ayat ");
 
+        mediaPlayer = new MediaPlayer();
+        String audioUrl = getIntent().getStringExtra("audio_url");
+        btnAudio = findViewById(R.id.tvAudio);
+        btnAudio.setOnClickListener(view -> {
+            if (mediaPlayer.isPlaying()) {
+                pauseAudio();
+            } else {
+                playAudio(audioUrl);
+            }
+        });
+
         setUpView();
         setUpRecyclerView();
         System.out.println(id);
-        getDataFromApi(id);
-        getDataFromApiArti(id);
-        getDataFromApiAudio(id);
+        getTranslateData(id);
 
     }
 
-    private void setUpRecyclerView() {
-        adapterAyat = new AdapterAyat(results);
-        adapterTerjemahan = new AdapterTerjemahan((ArrayList<TranslationsItem>) terjemahan);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapterAyat);
-        adapterAudio = new AdapterAudio(audio);
+    private void getTranslateData(int id) {
+        ApiServices.endPoint().getText(id).enqueue(new Callback<Terjemahan>() {
+            @Override
+            public void onResponse(Call<Terjemahan> call, Response<Terjemahan> response) {
+                if (response.isSuccessful()){
+                    DetailSurahActivity.this.result = response.body().getTranslations();
+                    getDataFromApi(getIntent().getIntExtra("id", 1));
+                }
+            }
 
-    }
-
-
+            @Override
+            public void onFailure(Call<Terjemahan> call, Throwable t) {
+            }
+        });
+}
     private void getDataFromApi(int id) {
         ApiServices.endPoint().getAyat(id).enqueue(new Callback<Verses>() {
             @Override
             public void onResponse(Call<Verses> call, Response<Verses> response) {
                 if (response.isSuccessful()) {
-                    List<VersesItem> result = response.body().getVerses();
-                    Log.d("Ayat", result.toString());
-                    adapterAyat.setData(result);
+                    DetailSurahActivity.this.versesItems = response.body().getVerses();
+                    adapterTerjemahan.setData(result, versesItems);
                 }
             }
 
             @Override
             public void onFailure(Call<Verses> call, Throwable t) {
-                Log.d("Ayat", results.toString());
-                adapterAyat.setData(results);
             }
         });
     }
 
-    private void getDataFromApiArti(int id){
-        ApiServices.endPoint().getText(id).enqueue(new Callback<Terjemahan>() {
-            @Override
-            public void onResponse(Call<Terjemahan> call, Response<Terjemahan> response) {
-                if(response.isSuccessful()){
-                    List<TranslationsItem> result = response.body().getTranslations();
-                    Log.d("Arti", result.toString());
-                    adapterTerjemahan.setData(result);
-                }
-            }
 
-            @Override
-            public void onFailure(
-                    Call<Terjemahan> call, Throwable t) {
-                Log.d("Error", t.toString());
-            }
-        });
+    private void setUpRecyclerView() {
+
+        adapterTerjemahan = new AdapterTerjemahan(results, terjemahan);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapterTerjemahan);
+
     }
 
-    private void getDataFromApiAudio (int id){
-        ApiServices.endPoint().getAudio(id).enqueue(new Callback<Audio>() {
 
-            public void onResponse (Call<Audio> call, Response<Audio> response){
-                List<AudioFilesItem> result = response.body().getAudioFiles();
-                Log.d("Audio", result.toString());
-                adapterAudio.setData(result);
-            }
-
-            @Override
-            public void onFailure(Call<Audio> call, Throwable t) {
-
-            }
-        });
+    private void pauseAudio(){
+        if (mediaPlayer.isPlaying()){
+            mediaPlayer.pause();
+        }
     }
-    
+
+    private void playAudio(String audio){
+        try {
+            mediaPlayer.reset();
+            mediaPlayer.setDataSource(audio);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
 
     private void setUpView() {
         recyclerView = findViewById(R.id.recyclerViewAyat);

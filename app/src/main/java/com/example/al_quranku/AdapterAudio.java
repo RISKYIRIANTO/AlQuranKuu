@@ -1,3 +1,4 @@
+/*
 package com.example.al_quranku;
 
 import android.annotation.SuppressLint;
@@ -32,7 +33,7 @@ public class AdapterAudio extends RecyclerView.Adapter<AdapterAudio.AudioViewHol
     @Override
     public AdapterAudio.AudioViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new AudioViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.audio, parent, false)
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_detail_surah, parent, false)
         );
     }
 
@@ -49,9 +50,10 @@ public class AdapterAudio extends RecyclerView.Adapter<AdapterAudio.AudioViewHol
             }
                 });
 
-        /*AudioFilesItem result = results.get(position);
+AudioFilesItem result = results.get(position);
 
-        holder.textViewayat.setText(result.getAudioUrl());*/
+        holder.textViewayat.setText(result.getAudioUrl());
+
 
     }
 
@@ -92,9 +94,10 @@ public class AdapterAudio extends RecyclerView.Adapter<AdapterAudio.AudioViewHol
         public AudioViewHolder(View itemView) {
             super(itemView);
 
-            audiobutton = itemView.findViewById(R.id.btAudio);
+            audiobutton = itemView.findViewById(R.id.tvAudio);
         }
     }
 
 }
 
+*/

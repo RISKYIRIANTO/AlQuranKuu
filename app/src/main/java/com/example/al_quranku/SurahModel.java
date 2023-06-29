@@ -3,6 +3,8 @@ package com.example.al_quranku;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.al_quranku.model.AyatModel.VersesItem;
+
 public class SurahModel implements Parcelable {
 
     private int id;
@@ -97,6 +99,9 @@ public class SurahModel implements Parcelable {
             return new SurahModel[size];
         }
     };
+
+    /*public VersesItem get(int position) {
+    }*/
 }
 class TranslatedName implements Parcelable {
 

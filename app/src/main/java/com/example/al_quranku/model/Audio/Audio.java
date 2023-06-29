@@ -1,7 +1,8 @@
 package com.example.al_quranku.model.Audio;
 
-import java.util.List;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Audio{
 
@@ -13,10 +14,10 @@ public class Audio{
 	}
 
 	@Override
- 	public String toString(){
-		return 
-			"Audio{" + 
-			"audio_files = '" + audioFiles + '\'' + 
-			"}";
-		}
+	public String toString(){
+		return
+				"Audio{" +
+						"audio_files = '" + audioFiles + '\'' +
+						"}";
+	}
 }
